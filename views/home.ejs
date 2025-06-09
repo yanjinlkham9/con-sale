@@ -205,10 +205,16 @@
               data-event="<%= CU[i].event %>"
             >
               <img
-                src="/static/image/product/<%= CU[i].imageUrl %>"
+                src="<%= CU[i].imageUrl %>"
                 alt="CU상품"
                 class="product-image"
               />
+              <!-- 
+              <img
+                src="/static/image/product/<%= CU[i].imageUrl %>"
+                alt="CU상품"
+                class="product-image"
+              /> -->
               <p><%= CU[i].name %></p>
               <p><%= CU[i].price %>원</p>
               <p class="event"><%= CU[i].event %></p>
@@ -239,7 +245,7 @@
               data-event="<%= GS25[i].event %>"
             >
               <img
-                src="/static/image/product/<%= GS25[i].imageUrl %>"
+                src="<%= GS25[i].imageUrl %>"
                 alt="GS25상품"
                 class="product-image"
               />
@@ -273,7 +279,7 @@
               data-event="<%= ELEVEN[i].event %>"
             >
               <img
-                src="/static/image/product/<%= ELEVEN[i].imageUrl %>"
+                src="<%= ELEVEN[i].imageUrl %>"
                 alt="7ELEVEN상품"
                 class="product-image"
               />

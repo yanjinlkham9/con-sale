@@ -114,24 +114,24 @@ for (let i = 1; i < 5; i++) {
 // cu배너
 const product = document.querySelector(".section5 > .container > .product");
 const container = document.querySelector(".section5 > .container");
-const clone = product.cloneNode(true);
+// const clone = product.cloneNode(true);
 product.classList.add("rolling1");
-clone.classList.add("rolling2");
-container.appendChild(clone);
+// clone.classList.add("rolling2");
+// container.appendChild(clone);
 // gs배너
 const product2 = document.querySelector(".section6 > .container > .product");
 const container2 = document.querySelector(".section6 > .container");
-const clone2 = product2.cloneNode(true);
+// const clone2 = product2.cloneNode(true);
 product2.classList.add("rolling1");
-clone2.classList.add("rolling2");
-container2.appendChild(clone2);
+// clone2.classList.add("rolling2");
+// container2.appendChild(clone2);
 // 세븐배너
 const product3 = document.querySelector(".section7 > .container > .product");
 const container3 = document.querySelector(".section7 > .container");
-const clone3 = product3.cloneNode(true);
+// const clone3 = product3.cloneNode(true);
 product3.classList.add("rolling1");
-clone3.classList.add("rolling2");
-container3.appendChild(clone3);
+// clone3.classList.add("rolling2");
+// container3.appendChild(clone3);
 
 // section4
 const allBtn = document.querySelector(

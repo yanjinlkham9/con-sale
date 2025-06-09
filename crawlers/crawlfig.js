@@ -54,7 +54,7 @@ module.exports = {
         Origin: "https://www.7-eleven.co.kr",
         Connection: "keep-alive",
       },
-      data: {}, // Additional headers for data requests can be added here
+      data: {},
     },
     BODY_DATA: {
       intPageSize: 4,

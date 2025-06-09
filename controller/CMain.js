@@ -1,5 +1,4 @@
 //controller\Cmain.js
-// const  = require("../models");
 const db = require("../models");
 const sequelize = db.sequelize;
 const { QueryTypes } = db.Sequelize;
@@ -23,9 +22,23 @@ exports.home = async (req, res) => {
     });
     const ELEVEN = await Products.findAll({
       where: {
-        convenienceName: "7ELEVEN",
+        convenienceName: "seven",
       },
+      attributes: [
+        [sequelize.fn("DISTINCT", sequelize.col("name")), "name"],
+        "id",
+        "price",
+        "imageUrl",
+        "event",
+        "tags",
+        "convenienceName",
+      ],
     });
+    console.log("ELEVEN.length:", ELEVEN.length);
+    console.log(
+      "ELEVEN items:",
+      ELEVEN.map((p) => p.name),
+    );
 
     const user = req.session.user;
 
