@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <%- include("./include/include", { title: "search" }) %>
+    <link rel="stylesheet" href="/static/css/search.css" />
+    <!-- FontAwesome (로딩 스피너 아이콘을 위해 추가) -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+      integrity="sha512-Fo3rlrZj/k7ujTnH2N2Xh2nYJc8JY4q5S2uP6aHBkMEGKM6Hh5R4tUlVJX0qV1gJkN+iUaT5hENcP3x29XNYXQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <style>
+      /* 팝업 창 스타일링 */
+      .comments-popup {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        display: none; /* 기본 숨김 */
+        justify-content: center;
+        align-items: center;
+        background-color: rgba(255, 192, 203, 0.8); /* 반투명 핑크 배경 */
+        z-index: 9999; /* 최상단 표시 */
+      }
+
+      .comments-popup.active {
+        display: flex; /* active 클래스 추가 시 표시 */
+      }
+
+      .popup-content {
+        background: #ffe6f0; /* 연한 핑크 배경 */
+        padding: 20px;
+        border-radius: 8px;
+        position: relative;
+        max-width: 600px;
+        width: 90%;
+        max-height: 80%;
+        overflow-y: auto;
+        box-shadow: 0 4px 8px rgba(255, 105, 180, 0.2); /* 핑크 그림자 추가 */
+      }
+
+      .popup-close {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        border: none;
+        background: transparent;
+        font-size: 24px;
+        cursor: pointer;
+        color: #ff69b4; /* 핑크색 */
+      }
+
+      /* 로딩 스피너 스타일 */
+      .loading-spinner {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        display: none; /* 기본 숨김 */
+        color: #ff69b4; /* 핑크색 */
+        font-size: 18px;
+      }
+
+      .loading-spinner.active {
+        display: block;
+      }
+
+      /* 추가 스타일 */
+      .comment {
+        border-bottom: 1px solid #ffd1dc; /* 연한 핑크색 */
+        padding: 10px 0;
+      }
+
+      .comment-author {
+        font-weight: bold;
+        color: #d63384; /* 진한 핑크색 */
+      }
+
+      .comment-content {
+        margin: 5px 0;
+        color: #c2185b; /* 핑크 계열 색상 */
+      }
+
+      .comment-actions {
+        margin-top: 5px;
+      }
+
+      .comment-actions span {
+        margin-right: 10px;
+        color: #ff6eb4; /* 밝은 핑크색 */
+        cursor: pointer;
+      }
+
+      .add-comment-form textarea {
+        width: 100%;
+        height: 80px;
+        resize: vertical;
+        padding: 10px;
+        margin-bottom: 10px;
+        border: 1px solid #ffb6c1; /* 연한 핑크색 */
+        border-radius: 4px;
+      }
+
+      .btn {
+        padding: 8px 16px;
+        background-color: #ff69b4; /* 핑크색 */
+        border: none;
+        color: #fff;
+        cursor: pointer;
+        border-radius: 4px;
+        transition: background-color 0.3s;
+      }
+
+      .btn:hover {
+        background-color: #ff85c1; /* 호버 시 연한 핑크색 */
+      }
+
+      .searchInput {
+        display: flex;
+        align-items: center;
+        margin-top: 10px;
+      }
+
+      .searchInput .search {
+        flex: 1;
+        padding: 8px;
+        border: 1px solid #ffb6c1; /* 연한 핑크색 */
+        border-radius: 4px 0 0 4px;
+        outline: none;
+      }
+
+      .searchInput .searchBtn {
+        width: 40px;
+        height: 40px;
+        cursor: pointer;
+        border: 1px solid #ffb6c1; /* 연한 핑크색 */
+        border-left: none;
+        border-radius: 0 4px 4px 0;
+        background-color: #ff69b4; /* 버튼 배경 핑크색 */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .searchInput .searchBtn img {
+        width: 20px;
+        height: 20px;
+      }
+
+      .product-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        margin-top: 20px;
+      }
+
+      .product-item {
+        width: calc(25% - 20px);
+        border: 1px solid #ffd1dc; /* 연한 핑크색 */
+        border-radius: 8px;
+        padding: 10px;
+        box-sizing: border-box;
+        position: relative;
+        background-color: #fff0f5; /* 아주 연한 핑크색 배경 */
+        transition: transform 0.3s, box-shadow 0.3s;
+        padding-bottom: 50px; /* 버튼 공간 확보 */
+      }
+
+      .product-item:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 8px rgba(255, 105, 180, 0.2); /* 핑크 그림자 */
+      }
+
+      .product-image {
+        width: 100%;
+        height: auto;
+        border-radius: 4px;
+      }
+
+      .product-name {
+        font-size: 1.2em;
+        margin: 10px 0 5px 0;
+        color: #d63384; /* 진한 핑크색 */
+      }
+
+      .product-price {
+        color: #ff69b4; /* 핑크색 */
+        margin-bottom: 5px;
+        font-weight: bold;
+      }
+
+      .product-event {
+        color: #ff1493; /* 핫 핑크색 */
+        margin-bottom: 10px;
+      }
+
+      .show-comments-button {
+        position: absolute;
+        bottom: 5px;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: #ff69b4; /* 핑크색 */
+        color: #fff;
+        border: none;
+        padding: 6px 12px;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        /* 추가 스타일 */
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .show-comments-button:hover {
+        background-color: #ff85c1; /* 호버 시 연한 핑크색 */
+      }
+
+      /* 반응형 디자인 추가 (선택 사항) */
+      @media (max-width: 1200px) {
+        .product-item {
+          width: calc(33.333% - 20px);
+        }
+      }
+
+      @media (max-width: 768px) {
+        .product-item {
+          width: calc(50% - 20px);
+        }
+      }
+
+      @media (max-width: 480px) {
+        .product-item {
+          width: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <%- include("./include/header") %> <% if (isSearch) { %>
+    <div class="section2">
+      <div class="container">
+        <h1>나만의 편의점 Fun Pick!</h1>
+        <br />
+        <h1>다양한 상품들을 확인해보세요</h1>
+        <div class="section4">
+          <div class="container">
+            <div><h3>"<%= insertQuery %>" 검색결과</h3></div>
+            <div class="searchInput">
+              <input type="text" class="search" required pattern="^[가-힣]+$" />
+              <img
+                src="/static/image/search.png"
+                alt="검색"
+                class="searchBtn"
+              />
+            </div>
+            <br />
+            <div>
+              "<%= insertQuery %>" 검색결과 총
+              <u>'<%= product.length %>'개</u>의 상품이 검색되었습니다.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section5">
+      <div class="container product-list">
+        <% for (let i = 0; i < product.length; i++) { %>
+        <div
+          class="menu product-item product"
+          data-product-id="<%= product[i].id %>"
+          data-tags="<%= JSON.stringify(product[i].tags) %>"
+          data-price="<%= product[i].price %>"
+          data-convenience="<%= product[i].convenienceName %>"
+          data-event="<%= product[i].event %>"
+        >
+          <img
+            src="/static/image/product/<%= product[i].imageUrl %>"
+            alt="편의점상품"
+            class="product-image"
+          />
+          <h3 class="product-name"><%= product[i].name %></h3>
+          <p class="product-price"><%= product[i].price %>원</p>
+          <p class="product-event"><%= product[i].event %></p>
+          <button
+            class="btn show-comments-button"
+            data-product-id="<%= product[i].id %>"
+          >
+            댓글 보기
+          </button>
+        </div>
+
+        <% } %>
+      </div>
+    </div>
+    <% } else { %>
+
+    <div class="section2">
+      <div class="container">
+        <h1>나만의 편의점 Fun Pick!</h1>
+        <br />
+        <h1>다양한 상품들을 확인해보세요</h1>
+        <div class="section4">
+          <div class="container">
+            <div><h3>"<%= insertQuery %>" 검색결과</h3></div>
+            <div class="searchInput">
+              <input type="text" class="search" />
+              <img
+                src="/static/image/search.png"
+                alt="검색"
+                class="searchBtn"
+              />
+            </div>
+            <br />
+            <div>
+              "<%= insertQuery %>" 검색결과 총
+              <u>'<%= product.length %>'개</u>의 상품이 검색되었습니다.
+            </div>
+            <div class="noSearch">
+              <img src="/static/image/nosearch.png" alt="검색결과없음" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <% } %>
+
+    <!-- 공통 댓글 팝업 -->
+    <div class="comments-popup" id="comments-popup">
+      <div class="popup-content">
+        <button
+          class="popup-close"
+          onclick="CommentsModule.closeCommentsPopup()"
+        >
+          &times;
+        </button>
+        <h2 id="popup-product-name"></h2>
+        <img
+          id="popup-product-image"
+          src=""
+          alt=""
+          class="popup-product-image"
+        />
+        <p id="popup-product-price" class="popup-product-price"></p>
+        <p id="popup-product-convenience" class="popup-product-convenience"></p>
+        <p id="popup-product-event" class="popup-product-event"></p>
+
+        <div class="comments-section">
+          <h3>댓글</h3>
+          <div id="comments-list">
+            <!-- 댓글이 여기에 표시됩니다 -->
+          </div>
+
+          <% if (typeof userId !== 'undefined' && userId) { %>
+          <div class="add-comment-form">
+            <h4>댓글 작성</h4>
+            <textarea
+              id="new-comment-content"
+              placeholder="댓글을 입력하세요"
+            ></textarea>
+            <button class="btn submit-comment-button">작성</button>
+          </div>
+          <% } else { %>
+          <p>댓글을 작성하려면 <a href="/login">로그인</a>하세요.</p>
+          <% } %>
+        </div>
+      </div>
+      <div class="loading-spinner" id="loading-spinner">
+        <i class="fas fa-spinner fa-spin"></i> 로딩 중...
+      </div>
+    </div>
+
+    <%- include("./include/footer") %>
+
+    <!-- 사용자 ID 전달 -->
+    <script>
+      // 사용자 ID를 클라이언트 사이드에 전달 (if authenticated)
+      window.userId = "<%= userId ? userId : '' %>";
+    </script>
+
+    <!-- 댓글 기능 스크립트 추가 -->
+    <script>
+      (function () {
+        // CommentsModule 정의
+        const CommentsModule = (function () {
+          // 댓글 팝업 열기 함수
+          const openCommentsPopup = async function (productId) {
+            const popup = document.getElementById("comments-popup");
+            const productName = document.getElementById("popup-product-name");
+            const productImage = document.getElementById("popup-product-image");
+            const productPrice = document.getElementById("popup-product-price");
+            const productConvenience = document.getElementById(
+              "popup-product-convenience"
+            );
+            const productEvent = document.getElementById("popup-product-event");
+            const commentsList = document.getElementById("comments-list");
+            const loadingSpinner = document.getElementById("loading-spinner");
+
+            // 팝업에 현재 제품 ID 설정
+            popup.setAttribute("data-product-id", productId);
+
+            // 팝업 열기
+            popup.classList.add("active");
+
+            // 로딩 스피너 표시
+            loadingSpinner.classList.add("active");
+
+            try {
+              // 제품 정보 가져오기
+              const productItem = document.querySelector(
+                `.product-item[data-product-id="${productId}"]`
+              );
+              const name = productItem.querySelector(".product-name").innerText;
+              const imageUrl = productItem.querySelector("img").src;
+              const price =
+                productItem.querySelector(".product-price").innerText;
+              const convenience = productItem.getAttribute("data-convenience");
+              const event = productItem.getAttribute("data-event");
+
+              productName.innerText = name;
+              productImage.src = imageUrl;
+              productImage.alt = name;
+              productPrice.innerText = price;
+              productConvenience.innerText = `편의점: ${convenience}`;
+              productEvent.innerText = `이벤트: ${event}`;
+
+              // 댓글 가져오기
+              const response = await fetch(
+                `/api/pcomments?productId=${productId}`
+              );
+              const data = await response.json();
+
+              if (response.ok) {
+                // 댓글 목록 초기화
+                commentsList.innerHTML = "";
+
+                if (data.comments.length === 0) {
+                  commentsList.innerHTML = "<p>댓글이 없습니다.</p>";
+                } else {
+                  data.comments.forEach((comment) => {
+                    const commentDiv = createCommentElement(comment);
+                    commentsList.appendChild(commentDiv);
+                  });
+                }
+              } else {
+                commentsList.innerHTML = `<p>Error: ${data.message}</p>`;
+              }
+            } catch (error) {
+              commentsList.innerHTML = `<p>Error: ${error.message}</p>`;
+            } finally {
+              // 로딩 스피너 숨기기
+              loadingSpinner.classList.remove("active");
+            }
+          };
+
+          // 댓글 요소 생성 함수
+          const createCommentElement = (comment) => {
+            const commentDiv = document.createElement("div");
+            commentDiv.classList.add("comment");
+
+            const authorDiv = document.createElement("div");
+            authorDiv.classList.add("comment-author");
+            authorDiv.innerText = comment.user.nickname; // 사용자 닉네임
+
+            const contentDiv = document.createElement("div");
+            contentDiv.classList.add("comment-content");
+            contentDiv.innerText = comment.commentDetail;
+
+            // 댓글 작성자와 현재 사용자가 동일한 경우에만 수정/삭제 버튼 표시
+            if (window.userId === comment.user.userId) {
+              const actionsDiv = document.createElement("div");
+              actionsDiv.classList.add("comment-actions");
+
+              const editBtn = document.createElement("span");
+              editBtn.classList.add("edit-comment");
+              editBtn.innerText = "수정";
+              editBtn.style.cursor = "pointer";
+              editBtn.onclick = () =>
+                editComment(comment.commentId, contentDiv);
+
+              const deleteBtn = document.createElement("span");
+              deleteBtn.classList.add("delete-comment");
+              deleteBtn.innerText = "삭제";
+              deleteBtn.style.cursor = "pointer";
+              deleteBtn.onclick = () =>
+                deleteComment(comment.commentId, commentDiv);
+
+              actionsDiv.appendChild(editBtn);
+              actionsDiv.appendChild(deleteBtn);
+              commentDiv.appendChild(actionsDiv);
+            }
+
+            commentDiv.appendChild(authorDiv);
+            commentDiv.appendChild(contentDiv);
+            return commentDiv;
+          };
+
+          // 댓글 제출 함수
+          const submitComment = async function () {
+            const popup = document.getElementById("comments-popup");
+            const productId = popup.getAttribute("data-product-id");
+            const commentContent = document
+              .getElementById("new-comment-content")
+              .value.trim();
+
+            if (!commentContent) {
+              alert("댓글 내용을 입력해주세요.");
+              return;
+            }
+
+            try {
+              const response = await fetch("/api/pcomments", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  pId: productId,
+                  commentDetail: commentContent,
+                  userId: window.userId, // 전역 userId 사용
+                }),
+              });
+
+              const data = await response.json();
+
+              if (response.ok) {
+                // 댓글 목록에 새 댓글 추가
+                const commentsList = document.getElementById("comments-list");
+                const commentDiv = createCommentElement(data);
+
+                commentsList.appendChild(commentDiv);
+
+                // 댓글 작성 폼 초기화
+                document.getElementById("new-comment-content").value = "";
+              } else {
+                alert(`Error: ${data.message}`);
+              }
+            } catch (error) {
+              alert(`Error: ${error.message}`);
+            }
+          };
+
+          // 댓글 수정 함수
+          const editComment = async function (commentId, contentDiv) {
+            const newContent = prompt(
+              "수정할 댓글을 입력하세요:",
+              contentDiv.innerText
+            );
+            if (newContent === null) return; // 취소 버튼 클릭 시 종료
+
+            if (!newContent.trim()) {
+              alert("댓글 내용을 입력해주세요.");
+              return;
+            }
+
+            try {
+              const response = await fetch(`/api/pcomments/${commentId}`, {
+                method: "PUT",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  commentDetail: newContent.trim(),
+                }),
+              });
+
+              const data = await response.json();
+
+              if (response.ok) {
+                contentDiv.innerText = data.commentDetail;
+              } else {
+                alert(`Error: ${data.message}`);
+              }
+            } catch (error) {
+              alert(`Error: ${error.message}`);
+            }
+          };
+
+          // 댓글 삭제 함수
+          const deleteComment = async function (commentId, commentDiv) {
+            if (!confirm("댓글을 삭제하시겠습니까?")) return;
+
+            try {
+              const response = await fetch(`/api/pcomments/${commentId}`, {
+                method: "DELETE",
+              });
+
+              const data = await response.json();
+
+              if (response.ok) {
+                commentDiv.remove();
+              } else {
+                alert(`Error: ${data.message}`);
+              }
+            } catch (error) {
+              alert(`Error: ${error.message}`);
+            }
+          };
+
+          // 댓글 팝업 닫기 함수
+          const closeCommentsPopup = function () {
+            const popup = document.getElementById("comments-popup");
+            const commentsList = document.getElementById("comments-list");
+            const loadingSpinner = document.getElementById("loading-spinner");
+
+            popup.classList.remove("active");
+            commentsList.innerHTML = "";
+
+            const newCommentContent = document.getElementById(
+              "new-comment-content"
+            );
+            if (newCommentContent) {
+              newCommentContent.value = "";
+            }
+
+            // 로딩 스피너 숨기기
+            loadingSpinner.classList.remove("active");
+          };
+
+          // 필터 적용 함수 (필요한 경우)
+          const applyFilters = function () {
+            const convenienceFilter =
+              document.getElementById("convenience-filter").value;
+            const eventFilter = document.getElementById("event-filter").value;
+            const sortFilter = document.getElementById("sort-filter").value;
+
+            const params = new URLSearchParams();
+
+            if (convenienceFilter)
+              params.append("convenience", convenienceFilter);
+            if (eventFilter) params.append("event", eventFilter);
+            if (sortFilter) params.append("sortBy", sortFilter);
+
+            window.location.search = params.toString();
+          };
+
+          // 상품 목록 업데이트 함수 (필요 시 추가)
+          const updateProductList = function (products) {
+            const productList = document.querySelector(".product-list");
+            productList.innerHTML = "";
+
+            if (products.length === 0) {
+              productList.innerHTML =
+                "<p>해당 조건에 맞는 상품이 없습니다.</p>";
+              return;
+            }
+
+            products.forEach(function (product) {
+              const productDiv = document.createElement("div");
+              productDiv.classList.add("product-item");
+              productDiv.setAttribute("data-product-id", product.id);
+              productDiv.setAttribute(
+                "data-tags",
+                JSON.stringify(product.tags)
+              );
+              productDiv.setAttribute("data-price", product.price);
+              productDiv.setAttribute(
+                "data-convenience",
+                product.convenienceName
+              );
+              productDiv.setAttribute("data-event", product.event);
+
+              const img = document.createElement("img");
+              img.src = product.imageUrl;
+              img.alt = product.name;
+              img.classList.add("product-image");
+
+              const name = document.createElement("h3");
+              name.classList.add("product-name");
+              name.innerText = product.name;
+
+              const price = document.createElement("p");
+              price.classList.add("product-price");
+              price.innerText = `${product.price}원`;
+
+              const event = document.createElement("p");
+              event.classList.add("product-event");
+              event.innerText = product.event;
+
+              const button = document.createElement("button");
+              button.classList.add("btn", "show-comments-button");
+              button.setAttribute("data-product-id", product.id);
+              button.innerText = "댓글 보기";
+
+              productDiv.appendChild(img);
+              productDiv.appendChild(name);
+              productDiv.appendChild(price);
+              productDiv.appendChild(event);
+              productDiv.appendChild(button);
+
+              productList.appendChild(productDiv);
+            });
+
+            // 새롭게 추가된 "댓글 보기" 버튼에도 이벤트 리스너 등록
+            const commentButtons = document.querySelectorAll(
+              ".show-comments-button"
+            );
+            commentButtons.forEach((button) => {
+              button.addEventListener("click", function () {
+                const productId = this.getAttribute("data-product-id");
+                CommentsModule.openCommentsPopup(productId);
+              });
+            });
+          };
+
+          // 공개 API
+          return {
+            openCommentsPopup,
+            submitComment,
+            editComment,
+            deleteComment,
+            closeCommentsPopup,
+            applyFilters,
+            updateProductList,
+          };
+        })();
+
+        // 이벤트 리스너 추가
+        document.addEventListener("DOMContentLoaded", function () {
+          // "댓글 보기" 버튼 클릭 시 팝업 열기 (로그인 여부와 관계없이)
+          const commentButtons = document.querySelectorAll(
+            ".show-comments-button"
+          );
+          commentButtons.forEach((button) => {
+            button.addEventListener("click", function () {
+              const productId = this.getAttribute("data-product-id");
+              CommentsModule.openCommentsPopup(productId);
+            });
+          });
+
+          // 댓글 작성 버튼 이벤트
+          const submitButton = document.querySelector(".submit-comment-button");
+          if (submitButton) {
+            submitButton.addEventListener(
+              "click",
+              CommentsModule.submitComment
+            );
+          }
+
+          // 팝업 외부 클릭 시 닫기
+          const popup = document.getElementById("comments-popup");
+          popup.addEventListener("click", function (event) {
+            if (event.target === popup) {
+              CommentsModule.closeCommentsPopup();
+            }
+          });
+
+          // ESC 키로 팝업 닫기
+          window.addEventListener("keydown", function (event) {
+            if (event.key === "Escape") {
+              CommentsModule.closeCommentsPopup();
+            }
+          });
+        });
+
+        // 글로벌 네임스페이스에 CommentsModule 할당
+        window.CommentsModule = CommentsModule;
+      })();
+    </script>
+
+    <!-- JavaScript 파일 로드 -->
+    <script src="/static/js/search.js"></script>
+  </body>
+</html>

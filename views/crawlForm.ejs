@@ -1,0 +1,90 @@
+<!-- views/crawlForm.ejs -->
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>크롤링 시작</title>
+    <!-- 외부 CSS 파일 링크 -->
+    <link rel="stylesheet" href="/static/styles.css" />
+    <style>
+      /* 간단한 로딩 스피너 스타일 */
+      .spinner {
+        border: 8px solid #f3f3f3;
+        border-top: 8px solid #3498db;
+        border-radius: 50%;
+        width: 60px;
+        height: 60px;
+        animation: spin 2s linear infinite;
+        margin: 20px auto;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      .error {
+        color: red;
+        margin-bottom: 10px;
+      }
+
+      .container {
+        max-width: 400px;
+        margin: 50px auto;
+        text-align: center;
+      }
+
+      input[type="password"] {
+        width: 100%;
+        padding: 10px;
+        margin: 10px 0;
+        box-sizing: border-box;
+      }
+
+      button {
+        padding: 10px 20px;
+        background-color: #3498db;
+        color: white;
+        border: none;
+        cursor: pointer;
+      }
+
+      button:hover {
+        background-color: #2980b9;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>크롤링 시작</h1>
+
+      <% if (error) { %>
+      <div class="error"><%= error %></div>
+      <% } %>
+
+      <form id="crawl-form">
+        <label for="password">6자리 비밀번호:</label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          maxlength="6"
+          required
+        />
+        <button type="submit">크롤링 시작</button>
+      </form>
+
+      <div id="progress" style="display: none">
+        <p>크롤링 중...</p>
+        <div class="spinner"></div>
+      </div>
+    </div>
+
+    <!-- 외부 JavaScript 파일 링크 -->
+    <script src="/static/js/crawlForm.js"></script>
+  </body>
+</html>

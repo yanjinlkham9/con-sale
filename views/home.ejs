@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/static/css/home.css" />
+    <%- include("./include/include",{title : "home"}) %>
+    <!-- swiper CDN -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+  </head>
+  <body>
+    <!-- 상단 헤더 -->
+    <%- include("./include/header") %>
+    <style>
+      /* 기존 .modal (슬라이드 배너 모달)에 사용되는 클래스와 혼동되지 않도록 별도로 작성 */
+      .comments-popup {
+        position: fixed; /* 화면 전체 고정 */
+        top: 0;
+        left: 0;
+        width: 100vw; /* 뷰포트 전체 너비 */
+        height: 100vh; /* 뷰포트 전체 높이 */
+        display: none; /* 초기에는 표시하지 않음 */
+        justify-content: center; /* display: flex 시 수평 중앙 정렬 */
+        align-items: center; /* display: flex 시 수직 중앙 정렬 */
+        background-color: rgba(0, 0, 0, 0.5); /* 어두운 오버레이(반투명) */
+        z-index: 9999; /* 최상단에 표시되도록 */
+      }
+      .comments-popup.active {
+        display: flex; /* 팝업 활성화 시 flex 컨테이너로 변경 */
+      }
+
+      /* 팝업 내부 컨텐츠 상자 */
+      .popup-content {
+        background: #fff;
+        width: 80%;
+        max-width: 600px;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        position: relative; /* 닫기 버튼 배치 등에 필요 */
+      }
+
+      /* 닫기 버튼 스타일 */
+      .popup-close {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: transparent;
+        border: none;
+        font-size: 24px;
+        cursor: pointer;
+      }
+
+      /* 로딩 스피너 */
+      .loading-spinner {
+        display: none;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: #fff;
+      }
+      .loading-spinner.active {
+        display: block;
+      }
+
+      /* 혹시 기존 .modal과 겹치지 않도록 .modal 관련 hidden 처리 */
+      .modal.hidden {
+        display: none;
+      }
+    </style>
+    <div class="sectionContainer">
+      <!-- (1) 섹션2: 메인 배너 -->
+      <div class="section2">
+        <div class="part1">
+          <div class="title">
+            <h1>Fun Pick</h1>
+          </div>
+          <div class="contents">
+            <p>편의점 쇼핑의 새로운 경험</p>
+            <p>
+              <b>CU,GS25,세븐일레븐</b>의 다양한 상품들을 한 곳에서 쉽고 빠르게
+              찾아보세요
+            </p>
+          </div>
+          <div class="detail">쇼핑하기</div>
+        </div>
+        <div class="part2">
+          <div class="arrow">
+            <img src="/static/image/up.png" alt="arrowUp" class="up" />
+          </div>
+        </div>
+      </div>
+
+      <!-- (2) 섹션3: 메인 슬라이드 -->
+      <div class="section3">
+        <div class="swiper">
+          <div class="swiper-wrapper">
+            <div class="swiper-slide slide1">
+              <img src="/static/image/img1.jpg" alt="슬라이드1" />
+              <div class="viewBox"><span class="view">자세히보기</span></div>
+            </div>
+            <div class="swiper-slide slide2">
+              <img src="/static/image/img2.jpg" alt="슬라이드2" />
+              <div class="viewBox"><span class="view">자세히보기</span></div>
+            </div>
+            <div class="swiper-slide slide3">
+              <img src="/static/image/img3.jpg" alt="슬라이드3" />
+              <div class="viewBox"><span class="view">자세히보기</span></div>
+            </div>
+            <div class="swiper-slide slide4">
+              <img src="/static/image/img4.jpg" alt="슬라이드4" />
+              <div class="viewBox"><span class="view">자세히보기</span></div>
+            </div>
+          </div>
+          <div class="swiper-pagination"></div>
+          <div class="stop">
+            <img
+              src="/static/image/stopbtn2.png"
+              alt="스탑버튼"
+              class="stopBtn"
+            />
+          </div>
+          <div class="swiper-button-prev">
+            <img
+              src="/static/image/arrowleft.png"
+              alt="이전버튼"
+              class="prev"
+            />
+          </div>
+          <div class="swiper-button-next">
+            <img
+              src="/static/image/arrowright.png"
+              alt="다음버튼"
+              class="next"
+            />
+          </div>
+        </div>
+
+        <!-- 슬라이드용 모달들(배너 클릭 시 뜨는) -->
+        <div class="modal modal1 hidden">
+          <div class="modalContent">
+            <img src="/static/image/modalimg1.jpg" alt="배너1" />
+          </div>
+          <button class="modalCloseBtn modalCloseBtn1">
+            <img src="/static/image/modalbtn.png" alt="모달닫기버튼" />
+          </button>
+        </div>
+        <div class="modal modal2 hidden">
+          <div class="modalContent">
+            <img src="/static/image/modalimg2.jpg" alt="배너2" />
+          </div>
+          <button class="modalCloseBtn modalCloseBtn2">
+            <img src="/static/image/modalbtn.png" alt="모달닫기버튼" />
+          </button>
+        </div>
+        <div class="modal modal3 hidden">
+          <div class="modalContent">
+            <img src="/static/image/modalimg3.jpg" alt="모달3" />
+          </div>
+          <button class="modalCloseBtn modalCloseBtn3">
+            <img src="/static/image/modalbtn.png" alt="모달닫기버튼" />
+          </button>
+        </div>
+        <div class="modal modal4 hidden">
+          <div class="modalContent">
+            <img src="/static/image/modalimg4.jpg" alt="모달4" />
+          </div>
+          <button class="modalCloseBtn modalCloseBtn4">
+            <img src="/static/image/modalbtn.png" alt="모달닫기버튼튼" />
+          </button>
+        </div>
+      </div>
+
+      <!-- (3) 섹션4: 행사상품 카테고리 -->
+      <div class="section4">
+        <div class="container">
+          <div class="part1">편의점 행사상품</div>
+          <div class="part2">
+            <ul>
+              <li class="all">전체</li>
+              <li class="one">1+1</li>
+              <li class="two">2+1</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- (4) 섹션5: CU 상품 목록 -->
+      <div class="section5">
+        <h1>CU</h1>
+        <div class="container">
+          <div class="product">
+            <% for (let i = 0; i < CU.length; i++) { %>
+            <div
+              class="menu product-item"
+              data-product-id="<%= CU[i].id %>"
+              data-tags="<%= JSON.stringify(CU[i].tags) %>"
+              data-price="<%= CU[i].price %>"
+              data-convenience="<%= CU[i].convenienceName %>"
+              data-event="<%= CU[i].event %>"
+            >
+              <img
+                src="/static/image/product/<%= CU[i].imageUrl %>"
+                alt="CU상품"
+                class="product-image"
+              />
+              <p><%= CU[i].name %></p>
+              <p><%= CU[i].price %>원</p>
+              <p class="event"><%= CU[i].event %></p>
+              <button
+                class="btn show-comments-button"
+                onclick="CommentsModule.openCommentsPopup('<%= CU[i].id %>')"
+              >
+                댓글 보기
+              </button>
+            </div>
+            <% } %>
+          </div>
+        </div>
+      </div>
+
+      <!-- (5) 섹션6: GS25 상품 목록 -->
+      <div class="section6">
+        <h1>GS25</h1>
+        <div class="container">
+          <div class="product">
+            <% for (let i = 0; i < GS25.length; i++) { %>
+            <div
+              class="menu product-item"
+              data-product-id="<%= GS25[i].id %>"
+              data-tags="<%= JSON.stringify(GS25[i].tags) %>"
+              data-price="<%= GS25[i].price %>"
+              data-convenience="<%= GS25[i].convenienceName %>"
+              data-event="<%= GS25[i].event %>"
+            >
+              <img
+                src="/static/image/product/<%= GS25[i].imageUrl %>"
+                alt="GS25상품"
+                class="product-image"
+              />
+              <p><%= GS25[i].name %></p>
+              <p><%= GS25[i].price %>원</p>
+              <p class="event"><%= GS25[i].event %></p>
+              <button
+                class="btn show-comments-button"
+                onclick="CommentsModule.openCommentsPopup('<%= GS25[i].id %>')"
+              >
+                댓글 보기
+              </button>
+            </div>
+            <% } %>
+          </div>
+        </div>
+      </div>
+
+      <!-- (6) 섹션7: 7ELEVEN 상품 목록 -->
+      <div class="section7">
+        <h1>7ELEVEN</h1>
+        <div class="container">
+          <div class="product">
+            <% for (let i = 0; i < ELEVEN.length; i++) { %>
+            <div
+              class="menu product-item"
+              data-product-id="<%= ELEVEN[i].id %>"
+              data-tags="<%= JSON.stringify(ELEVEN[i].tags) %>"
+              data-price="<%= ELEVEN[i].price %>"
+              data-convenience="<%= ELEVEN[i].convenienceName %>"
+              data-event="<%= ELEVEN[i].event %>"
+            >
+              <img
+                src="/static/image/product/<%= ELEVEN[i].imageUrl %>"
+                alt="7ELEVEN상품"
+                class="product-image"
+              />
+              <p><%= ELEVEN[i].name %></p>
+              <p><%= ELEVEN[i].price %>원</p>
+              <p class="event"><%= ELEVEN[i].event %></p>
+              <button
+                class="btn show-comments-button"
+                onclick="CommentsModule.openCommentsPopup('<%= ELEVEN[i].id %>')"
+              >
+                댓글 보기
+              </button>
+            </div>
+            <% } %>
+          </div>
+        </div>
+      </div>
+
+      <!-- (7) 섹션8: 추가 상품 소개 및 검색 -->
+      <div class="section8">
+        <div class="container">
+          <div class="part1">
+            <h1>더 많은 상품을 보고싶다면?</h1>
+            <p>Fun Pick의 다양한 상품들을 소개합니다!</p>
+            <div class="searchBox">
+              <input
+                type="text"
+                placeholder="김치를 검색해보세요!"
+                class="searchText"
+                required
+                pattern="^[가-힣]+$"
+              />
+              <div class="search">
+                <img src="/static/image/search.png" alt="검색버튼" />
+              </div>
+            </div>
+          </div>
+          <div class="part2">
+            <div class="menu menu1">
+              <a href="/search?productName=샐러드">
+                <img src="/static/image/menu1.png" alt="샐러드" />
+                샐러드
+              </a>
+            </div>
+            <div class="menu menu2">
+              <a href="/search?productName=샌드위치">
+                <img src="/static/image/menu2.png" alt="샌드위치" />
+                샌드위치
+              </a>
+            </div>
+            <div class="menu menu3">
+              <a href="/search?productName=삼각김밥">
+                <img src="/static/image/menu3.png" alt="삼각김밥" />
+                삼각김밥
+              </a>
+            </div>
+            <div class="menu menu4">
+              <a href="/search?productName=도시락">
+                <img src="/static/image/menu4.png" alt="도시락" />
+                도시락
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- (8) 섹션9: 이메일 등록 -->
+      <div class="section9">
+        <div class="container">
+          <div class="inner">
+            <input
+              type="email"
+              placeholder="example@naver.com"
+              required
+              pattern="^[a-zA-Z0-9._%+\-]+@naver\.com$"
+              title="네이버 메일 주소 형식(example@naver.com)으로 입력해주세요."
+              class="email"
+            />
+            <button type="button" onclick="emailVerify()">등록</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 푸터 -->
+      <%- include("./include/footer") %>
+    </div>
+
+    <!-- (9) 댓글 팝업 (모달) -->
+    <div class="comments-popup" id="comments-popup">
+      <div class="popup-content">
+        <button
+          class="popup-close"
+          onclick="CommentsModule.closeCommentsPopup()"
+        >
+          ×
+        </button>
+        <h2 id="popup-product-name"></h2>
+        <img
+          id="popup-product-image"
+          src=""
+          alt=""
+          class="popup-product-image"
+        />
+        <p id="popup-product-price" class="popup-product-price"></p>
+        <p id="popup-product-convenience" class="popup-product-convenience"></p>
+        <p id="popup-product-event" class="popup-product-event"></p>
+
+        <div class="comments-section">
+          <h3>댓글</h3>
+          <div id="comments-list">
+            <!-- 댓글 목록이 동적으로 표시될 영역 -->
+          </div>
+
+          <% if (isLogin) { %>
+          <div class="add-comment-form">
+            <h4>댓글 작성</h4>
+            <textarea
+              id="new-comment-content"
+              placeholder="댓글을 입력하세요"
+            ></textarea>
+            <button class="btn submit-comment-button">작성</button>
+          </div>
+          <% } else { %>
+          <p>댓글을 작성하려면 <a href="/login">로그인</a>하세요.</p>
+          <% } %>
+        </div>
+      </div>
+
+      <!-- 로딩 스피너 -->
+      <div class="loading-spinner" id="loading-spinner">
+        <i class="fas fa-spinner fa-spin"></i> 로딩 중...
+      </div>
+    </div>
+    <script>
+      window.userId = "<%= isLogin && userId ? userId : '' %>";
+    </script>
+
+    <!-- 댓글 기능 스크립트 (CommentsModule) -->
+    <script>
+      (function () {
+        // 댓글 모듈
+        const CommentsModule = (function () {
+          // 팝업 열기
+          const openCommentsPopup = async function (productId) {
+            const popup = document.getElementById("comments-popup");
+            if (!popup) {
+              console.error("댓글 팝업 요소를 찾을 수 없습니다.");
+              return;
+            }
+
+            const productName = document.getElementById("popup-product-name");
+            const productImage = document.getElementById("popup-product-image");
+            const productPrice = document.getElementById("popup-product-price");
+            const productConvenience = document.getElementById(
+              "popup-product-convenience",
+            );
+            const productEvent = document.getElementById("popup-product-event");
+            const commentsList = document.getElementById("comments-list");
+            const loadingSpinner = document.getElementById("loading-spinner");
+
+            if (
+              !productName ||
+              !productImage ||
+              !productPrice ||
+              !productConvenience ||
+              !productEvent ||
+              !commentsList ||
+              !loadingSpinner
+            ) {
+              console.error("댓글 팝업 내부 요소 중 일부를 찾을 수 없습니다.");
+              return;
+            }
+
+            // 팝업에 제품 ID 저장
+            popup.setAttribute("data-product-id", productId);
+
+            // 제품 정보 가져오기(화면에서)
+            const productItem = document.querySelector(
+              `.product-item[data-product-id="${productId}"]`,
+            );
+            if (!productItem) {
+              console.error(
+                `제품 항목이 존재하지 않습니다: productId=${productId}`,
+              );
+              return;
+            }
+
+            // 화면에서 제품명, 이미지, 가격, 편의점명, 이벤트 값 추출
+            const name =
+              productItem.querySelector("p:nth-of-type(1)").innerText;
+            const imageUrl = productItem.querySelector("img").src;
+            const price =
+              productItem.querySelector("p:nth-of-type(2)").innerText;
+            const convenience = productItem.getAttribute("data-convenience");
+            const event = productItem.getAttribute("data-event");
+
+            // 팝업 내용 채우기
+            productName.innerText = name;
+            productImage.src = imageUrl;
+            productImage.alt = name;
+            productPrice.innerText = price;
+            productConvenience.innerText = `편의점: ${convenience}`;
+            productEvent.innerText = `이벤트: ${event}`;
+
+            // 댓글 리스트 초기화, 로딩스피너 on
+            commentsList.innerHTML = "";
+            loadingSpinner.classList.add("active");
+
+            // 팝업 열기 (화면 중앙 레이어)
+            popup.classList.add("active");
+
+            // 서버에서 실제 댓글 불러오기
+            try {
+              const response = await fetch(
+                `/api/pcomments?productId=${productId}`,
+              );
+              const data = await response.json();
+
+              if (response.ok) {
+                if (data.comments.length === 0) {
+                  commentsList.innerHTML = "<p>댓글이 없습니다.</p>";
+                } else {
+                  data.comments.forEach((comment) => {
+                    const commentDiv = createCommentElement(comment);
+                    commentsList.appendChild(commentDiv);
+                  });
+                }
+              } else {
+                commentsList.innerHTML = `<p>Error: ${data.message}</p>`;
+              }
+            } catch (error) {
+              commentsList.innerHTML = `<p>Error: ${error.message}</p>`;
+            } finally {
+              // 로딩 스피너 끄기
+              loadingSpinner.classList.remove("active");
+            }
+          };
+
+          // 댓글 DOM 생성
+          const createCommentElement = (comment) => {
+            const commentDiv = document.createElement("div");
+            commentDiv.classList.add("comment");
+
+            const authorDiv = document.createElement("div");
+            authorDiv.classList.add("comment-author");
+            authorDiv.innerText = comment.user.nickname;
+
+            const contentDiv = document.createElement("div");
+            contentDiv.classList.add("comment-content");
+            contentDiv.innerText = comment.commentDetail;
+
+            // 현재 로그인 사용자의 userId와 댓글 작성자의 userId가 같으면 수정/삭제 가능
+            if (window.userId && window.userId === comment.user.userId) {
+              const actionsDiv = document.createElement("div");
+              actionsDiv.classList.add("comment-actions");
+
+              const editBtn = document.createElement("span");
+              editBtn.classList.add("edit-comment");
+              editBtn.innerText = "수정";
+              editBtn.onclick = () =>
+                editComment(comment.commentId, contentDiv);
+
+              const deleteBtn = document.createElement("span");
+              deleteBtn.classList.add("delete-comment");
+              deleteBtn.innerText = "삭제";
+              deleteBtn.onclick = () =>
+                deleteComment(comment.commentId, commentDiv);
+
+              actionsDiv.appendChild(editBtn);
+              actionsDiv.appendChild(deleteBtn);
+              commentDiv.appendChild(actionsDiv);
+            }
+
+            commentDiv.appendChild(authorDiv);
+            commentDiv.appendChild(contentDiv);
+            return commentDiv;
+          };
+
+          // 댓글 제출
+          const submitComment = async function () {
+            if (!window.userId) {
+              alert("로그인이 필요합니다.");
+              return;
+            }
+
+            const popup = document.getElementById("comments-popup");
+            const productId = popup.getAttribute("data-product-id");
+            const commentContent = document
+              .getElementById("new-comment-content")
+              .value.trim();
+
+            if (!commentContent) {
+              alert("댓글 내용을 입력해주세요.");
+              return;
+            }
+
+            try {
+              const response = await fetch("/api/pcomments", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  pId: productId,
+                  commentDetail: commentContent,
+                  userId: window.userId,
+                }),
+              });
+
+              const data = await response.json();
+              if (response.ok) {
+                // 방금 작성한 댓글 DOM 추가
+                const commentsList = document.getElementById("comments-list");
+                const commentDiv = createCommentElement(data);
+                commentsList.appendChild(commentDiv);
+
+                // 입력창 초기화
+                document.getElementById("new-comment-content").value = "";
+              } else {
+                alert(`Error: ${data.message}`);
+              }
+            } catch (error) {
+              alert(`Error: ${error.message}`);
+            }
+          };
+
+          // 댓글 수정
+          const editComment = async function (commentId, contentDiv) {
+            const newContent = prompt(
+              "수정할 댓글 내용을 입력하세요:",
+              contentDiv.innerText,
+            );
+            if (newContent === null) return; // 취소
+            if (!newContent.trim()) {
+              alert("댓글 내용을 입력해주세요.");
+              return;
+            }
+
+            try {
+              const response = await fetch(`/api/pcomments/${commentId}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ commentDetail: newContent.trim() }),
+              });
+              const data = await response.json();
+              if (response.ok) {
+                contentDiv.innerText = data.commentDetail;
+              } else {
+                alert(`Error: ${data.message}`);
+              }
+            } catch (error) {
+              alert(`Error: ${error.message}`);
+            }
+          };
+
+          // 댓글 삭제
+          const deleteComment = async function (commentId, commentDiv) {
+            if (!confirm("댓글을 삭제하시겠습니까?")) return;
+            try {
+              const response = await fetch(`/api/pcomments/${commentId}`, {
+                method: "DELETE",
+              });
+              const data = await response.json();
+              if (response.ok) {
+                commentDiv.remove();
+              } else {
+                alert(`Error: ${data.message}`);
+              }
+            } catch (error) {
+              alert(`Error: ${error.message}`);
+            }
+          };
+
+          // 팝업 닫기
+          const closeCommentsPopup = function () {
+            const popup = document.getElementById("comments-popup");
+            const commentsList = document.getElementById("comments-list");
+
+            // 팝업 닫기
+            popup.classList.remove("active");
+            commentsList.innerHTML = "";
+
+            // 댓글 입력창 초기화
+            const newCommentContent = document.getElementById(
+              "new-comment-content",
+            );
+            if (newCommentContent) {
+              newCommentContent.value = "";
+            }
+          };
+
+          return {
+            openCommentsPopup,
+            submitComment,
+            editComment,
+            deleteComment,
+            closeCommentsPopup,
+          };
+        })();
+
+        // 페이지 로드 후, 댓글 작성 버튼에 이벤트 연결
+        document.addEventListener("DOMContentLoaded", function () {
+          const submitButton = document.querySelector(".submit-comment-button");
+          if (submitButton) {
+            submitButton.addEventListener(
+              "click",
+              CommentsModule.submitComment,
+            );
+          }
+
+          const closeButton = document.querySelector(".popup-close");
+          if (closeButton) {
+            closeButton.addEventListener(
+              "click",
+              CommentsModule.closeCommentsPopup,
+            );
+          }
+        });
+
+        // 전역으로 CommentsModule 노출
+        window.CommentsModule = CommentsModule;
+      })();
+    </script>
+
+    <!-- 댓글 기능 스크립트는 home.js에 포함되어 있다고 가정 -->
+    <script src="/static/js/home.js"></script>
+  </body>
+</html>

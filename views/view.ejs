@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>글 확인</title>
+    <link rel="stylesheet" href="/static/css/view.css" />
+  </head>
+  <body>
+    <div class="content-container">
+      <div class="image-container">
+        <% if (post.boardPicPath) { %>
+        <img
+          src="<%= post.boardPicPath %>"
+          alt="첨부 이미지"
+          class="post-image"
+        />
+        <% } %>
+      </div>
+      <div class="details-container">
+        <div class="details-box">
+          <h3>제목</h3>
+          <h1><%= post.boardTitle %></h1>
+          <p>작성자: <%= post.userId %></p>
+          <p>작성일: <%= post.boardDate.toLocaleString() %></p>
+          <p>분류: <%= post.boardCategory %></p>
+        </div>
+        <div class="details-content">
+          <h3>내용</h3>
+          <textarea readonly><%= post.boardDetail %></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="comment-container">
+      <h2>댓글</h2>
+      <% if (comments && comments.length > 0) { %> <%
+      comments.forEach(function(comment) { %>
+      <div class="comment-item">
+        <p><strong><%= comment.userId %></strong></p>
+        <p><%= comment.bcDetail %></p>
+        <button class="btn-edit" onclick="editComment('<%= comment.bcId %>')">
+          수정
+        </button>
+        <button
+          class="btn-delete"
+          onclick="deleteComment('<%= comment.bcId %>')"
+        >
+          삭제
+        </button>
+      </div>
+      <% }) %> <% } else { %>
+      <p>댓글이 없습니다.</p>
+      <% } %>
+
+      <!-- 댓글 작성 폼 -->
+      <form action="/board/view/<%= post.boardId %>/comment" method="POST">
+        <textarea
+          name="bcDetail"
+          rows="3"
+          placeholder="댓글을 입력하세요."
+          required
+        ></textarea>
+        <div class="button-group">
+          <button
+            type="button"
+            class="btn-delete"
+            onclick="deletePost('<%= post.boardId %>')"
+          >
+            글 삭제
+          </button>
+          <button type="submit" class="btn-submit">댓글 작성</button>
+          <button
+            type="button"
+            class="btn-cancel"
+            onclick="location.href='/board';"
+          >
+            나가기
+          </button>
+        </div>
+      </form>
+    </div>
+    <script src="/static/js/view.js"></script>
+  </body>
+</html>

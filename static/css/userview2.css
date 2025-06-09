@@ -1,0 +1,115 @@
+.View-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+  padding-top: 150px;
+  padding-bottom: 50px;
+  color: rgb(36, 36, 36);
+}
+
+.View-container > .profileBox {
+  box-shadow: 0px 0px 5px #bebebe;
+  border-radius: 10px;
+  padding-bottom: 50px;
+  padding-top: 20px;
+}
+
+.View-container > .profileBox > .profile {
+  width: 200px;
+  height: 200px;
+  margin: 50 auto 50;
+  border-radius: 999px;
+  border: 1px solid salmon;
+}
+
+.View-container > .profileBox > .profile > img {
+  border-radius: 999px;
+  width: 100%;
+  height: 100%;
+}
+
+.View-container > .profileBox > .profileFile {
+  text-align: center;
+}
+
+.View-container > .profileBox > .profileFile .btn1 {
+  color: #d1d0d0;
+}
+.View-container > .profileBox > .profileFile .btn2 {
+  background-color: #ff6b73;
+  color: #fff;
+  border: 1px solid;
+  border-radius: 8px;
+  padding: 8px;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.View-container > .profileBox > .nicknameBox {
+  font-size: 100px;
+}
+
+.View-container > .profileBox > .infoBox {
+  font-size: 16px;
+  color: #8a8a8a;
+  width: 200px;
+  margin: 0 auto;
+  margin-top: 5px;
+  padding-top: 5px;
+  text-align: center;
+}
+
+.View-container > .profileBox > .infoBox > li:nth-of-type(1),
+.View-container > .profileBox > .infoBox > li:nth-of-type(2) {
+  display: flex;
+  text-align: center;
+  margin-top: 2px;
+}
+
+/* .container > .infoBox .nickName {
+  width: 100px;
+  border-radius: 8px;
+  border: 1px solid gray;
+} */
+/* 
+.container > .infoBox .checkRedundanc {
+  background-color: #ff6b73;
+  color: #fff;
+  border: 1px solid;
+  border-radius: 8px;
+  padding: 1px;
+  font-weight: bold;
+  font-size: 13px;
+} */
+
+.View-container > .profileBox > .buttonBox {
+  padding: 20px;
+  margin-top: 30px;
+}
+
+.View-container > .profileBox > .buttonBox .modifyBtn {
+  background-color: #ff6b73;
+  color: #fff;
+  border: 1px solid;
+  border-radius: 8px;
+  padding: 8px;
+  font-weight: bold;
+  font-size: 14px;
+  margin-top: 30px;
+}
+
+/* 반응형 디자인 */
+/* @media (max-width: 600px) {
+  .container {
+    padding: 15px;
+  }
+
+  .profileFile .btn2 {
+    width: 100%;
+    margin-top: 10px;
+  }
+
+  .infoBox input {
+    width: 100%;
+  }
+} */

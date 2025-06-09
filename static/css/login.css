@@ -1,0 +1,134 @@
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+}
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #f9f9f9;
+}
+
+.loginBox {
+  width: 350px;
+  margin: 140px auto;
+  padding: 20px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  position: relative;
+  text-align: center;
+}
+
+.loginBox h2 {
+  margin-bottom: 20px;
+  font-size: 24px;
+  color: #555;
+}
+
+.loginBox label {
+  display: block;
+  margin-bottom: 10px;
+  font-size: 14px;
+  color: #333;
+  text-align: left;
+}
+
+.loginBox input[type="text"],
+.loginBox input[type="password"] {
+  width: calc(100% - 20px);
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.loginBox button {
+  width: 99%;
+  padding: 12px;
+  background: #ff5252;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  margin-top: 15px;
+  transition: background 0.3s;
+}
+
+.loginBox button:hover {
+  background: #e04848;
+}
+
+.loginBox p {
+  margin-top: 15px;
+  font-size: 14px;
+  color: #777;
+}
+
+.loginBox p a {
+  color: #ff5252;
+  text-decoration: none;
+}
+
+.loginBox p a:hover {
+  text-decoration: underline;
+}
+
+.loginBox .findPw a:hover {
+  text-decoration: underline;
+  font-size: 13px;
+}
+/* 반응형 디자인 */
+/* PC 스타일 1024px ~ */
+@media (min-width: 1024px) {
+  .loginBox {
+    width: 400px;
+    margin: 160px auto;
+    padding: 25px;
+  }
+  .loginBox h2 {
+    font-size: 28px;
+  }
+}
+
+/* 태블릿 스타일 768px ~ 1023px*/
+@media (min-width: 768px) and (max-width: 1023px) {
+  .loginBox {
+    width: 300px;
+    margin: 120px auto;
+    padding: 20px;
+  }
+  .loginBox h2 {
+    font-size: 22px;
+  }
+  .loginBox input[type="text"],
+  .loginBox input[type="password"] {
+    font-size: 13px;
+  }
+  .loginBox button {
+    font-size: 15px;
+  }
+}
+
+/* 모바일 스타일 ~ 768px*/
+@media (max-width: 767px) {
+  .loginBox {
+    width: 90%;
+    margin: 100px auto;
+    padding: 15px;
+  }
+  .loginBox h2 {
+    font-size: 20px;
+  }
+  .loginBox input[type="text"],
+  .loginBox input[type="password"] {
+    font-size: 12px;
+  }
+  .loginBox button {
+    font-size: 14px;
+  }
+}

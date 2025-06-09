@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>글 작성</title>
+    <%- include("./include/include", { title: "자유게시판 - 글 작성" }) %>
+    <link rel="stylesheet" href="/static/css/board.css" />
+  </head>
+  <body>
+    <div class="header"><%- include("./include/header") %></div>
+    <br /><br />
+    <div class="board-list">
+      <br /><br />
+      <br /><br />
+      <h1>글 작성</h1>
+      <form action="/board/write" method="POST" enctype="multipart/form-data">
+        <div>
+          <label for="boardTitle">제목</label>
+          <input type="text" name="boardTitle" id="boardTitle" required />
+        </div>
+        <div>
+          <label for="boardCategory">분류</label>
+          <select name="boardCategory" id="boardCategory" required>
+            <option value="전체">전체</option>
+            <option value="제품후기">제품후기</option>
+            <option value="레시피 공유">레시피 공유</option>
+            <option value="할인 정보">할인 정보</option>
+            <option value="잡수다">잡수다</option>
+          </select>
+        </div>
+        <div>
+          <label for="boardDetail">내용</label>
+          <textarea
+            name="boardDetail"
+            id="boardDetail"
+            rows="5"
+            required
+          ></textarea>
+        </div>
+        <div>
+          <label for="boardPic">이미지 첨부</label>
+          <input type="file" name="boardPic" id="boardPic" />
+        </div>
+        <div style="margin-top: 15px">
+          <button type="submit" class="btn-submit">등록</button>
+          <button
+            type="button"
+            class="btn-cancel"
+            onclick="location.href='/board';"
+          >
+            나가기
+          </button>
+        </div>
+      </form>
+    </div>
+    <script src="/static/js/write.js"></script>
+  </body>
+</html>

@@ -1,0 +1,84 @@
+<div class="section1">
+  <div class="container">
+    <div class="title">
+      <a href="/">
+        <img src="/static/image/logo5.png" alt="" />
+      </a>
+    </div>
+    <div class="part1">
+      <ul>
+        <% if (isLogin) { %>
+
+        <li><%=name%>님 <br />환영합니다.</li>
+        <li>
+          <a href="/logout" class="logout">Logout</a>
+        </li>
+        <li><a href="/mypage">마이페이지</a></li>
+        <% } else { %>
+        <li>
+          <a href="/login">Login</a>
+        </li>
+        <li><a href="/register">회원가입</a></li>
+        <% } %>
+        <img src="/static/image/burger.png" alt="" class="mobile burger" />
+      </ul>
+    </div>
+    <div class="part2 navbar">
+      <ul class="navbar">
+        <!-- Home -->
+        <div class="store1 store">
+          <li><a href="/">Home</a></li>
+        </div>
+
+        <!-- CU -->
+        <div class="store2 store">
+          <li><a href="/about?convini=cu">CU</a></li>
+          <ul class="menu2 menu">
+            <li><a href="/about?convini=cu">전체</a></li>
+            <li><a href="/about?convini=cu&category=삼각김밥">삼각김밥</a></li>
+            <li><a href="/about?convini=cu&category=도시락">도시락</a></li>
+            <li><a href="/about?convini=cu&category=샌드위치">샌드위치</a></li>
+            <li><a href="/about?convini=cu&category=샐러드">샐러드</a></li>
+          </ul>
+        </div>
+
+        <!-- GS25 -->
+        <div class="store3 store">
+          <li><a href="/about?convini=gs25">GS25</a></li>
+          <ul class="menu3 menu">
+            <li><a href="/about?convini=gs25">전체</a></li>
+            <li>
+              <a href="/about?convini=gs25&category=삼각김밥">삼각김밥</a>
+            </li>
+            <li><a href="/about?convini=gs25&category=도시락">도시락</a></li>
+            <li>
+              <a href="/about?convini=gs25&category=샌드위치">샌드위치</a>
+            </li>
+            <li><a href="/about?convini=gs25&category=샐러드">샐러드</a></li>
+          </ul>
+        </div>
+
+        <!-- 7ELEVEN -->
+        <div class="store4 store">
+          <li><a href="/about?convini=seven">7ELEVEN</a></li>
+          <ul class="menu4 menu">
+            <li><a href="/about?convini=seven">전체</a></li>
+            <li>
+              <a href="/about?convini=seven&category=삼각김밥">삼각김밥</a>
+            </li>
+            <li><a href="/about?convini=seven&category=도시락">도시락</a></li>
+            <li>
+              <a href="/about?convini=seven&category=샌드위치">샌드위치</a>
+            </li>
+            <li><a href="/about?convini=seven&category=샐러드">샐러드</a></li>
+          </ul>
+        </div>
+
+        <!-- 자유게시판 -->
+        <div class="store5 store">
+          <li><a href="/board">자유게시판</a></li>
+        </div>
+      </ul>
+    </div>
+  </div>
+</div>

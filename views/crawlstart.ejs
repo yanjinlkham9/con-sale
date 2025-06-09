@@ -1,0 +1,68 @@
+<!-- views/crawlstart.ejs -->
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>크롤링 시작</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+      }
+      .container {
+        max-width: 600px;
+        margin: auto;
+      }
+      .button {
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        cursor: pointer;
+        font-size: 16px;
+        margin-bottom: 20px;
+      }
+      .button:hover {
+        background-color: #0056b3;
+      }
+      .progress-board {
+        border: 1px solid #ccc;
+        padding: 10px;
+        height: 300px;
+        overflow-y: scroll;
+        background-color: #f9f9f9;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>크롤링 시작</h1>
+      <button class="button" id="startCrawl">크롤링 시작</button>
+      <h2>진행 상황</h2>
+      <div class="progress-board" id="progressBoard">
+        <!-- 진행 상황이 여기에 표시됩니다 -->
+      </div>
+    </div>
+
+    <script>
+      document.getElementById("startCrawl").addEventListener("click", () => {
+        // 크롤링 시작 버튼 클릭 시 API 호출 (모의)
+        fetch("/products/crawl", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ action: "start" }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            const progressBoard = document.getElementById("progressBoard");
+            progressBoard.innerHTML += `<p>${data.message}</p>`;
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
+      });
+    </script>
+  </body>
+</html>

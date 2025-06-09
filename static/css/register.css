@@ -1,0 +1,140 @@
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+}
+body {
+  font-family: "Gowun Dodum", serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f9f9f9;
+}
+.registerBox {
+  width: 370px;
+  margin: 140px auto;
+  padding: 20px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  position: relative;
+  text-align: center;
+}
+.registerBox h2 {
+  margin-bottom: 20px;
+  font-size: 24px;
+  color: #555;
+}
+.registerBox label {
+  display: block;
+  margin-bottom: 10px;
+  font-size: 14px;
+  color: #333;
+  text-align: left;
+}
+.registerBox input[type="text"],
+.registerBox input[type="password"] {
+  width: calc(100% - 20px);
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+}
+.registerBox .Idline #userId {
+  width: calc(100% - 100px);
+  height: 40px;
+  border-radius: 5px;
+  border: 1px solid lightgray;
+  margin-right: 10px;
+  padding: 8px;
+  font-size: 14px;
+}
+.registerBox button[type="submit"] {
+  width: 80%;
+  padding: 12px;
+  background: #ff5252;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  margin-top: 15px;
+  transition: background 0.3s;
+}
+
+.registerBox button[type="submit"]:hover {
+  background: #e04848;
+}
+
+.registerBox button[type="button"] {
+  width: calc(100% - 100px -88px);
+  height: 40px;
+  background-color: #ff5252;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+.registerBox button[type="button"]:hover {
+  background: #e04848;
+}
+
+.registerBox p {
+  margin-top: 15px;
+  font-size: 14px;
+  color: #777;
+}
+
+.registerBox p a {
+  color: #ff5252;
+  text-decoration: none;
+}
+
+.registerBox p a:hover {
+  text-decoration: underline;
+}
+
+/* PC 1024px ~ */
+@media (min-width: 1024px) {
+  .registerBox {
+    width: 400px;
+    margin: 150px auto;
+  }
+}
+
+/*  테블릿 : 768px ~ 1023px */
+@media (max-width: 1023px) and (min-width: 768px) {
+  .registerBox {
+    width: 85%;
+    margin: 100px auto;
+  }
+
+  .registerBox h2 {
+    font-size: 20px;
+  }
+}
+
+/* 모바일 : ~ 768px*/
+@media (max-width: 767px) {
+  .registerBox {
+    width: 90%;
+    margin: 60px auto;
+    padding: 15px;
+  }
+
+  .registerBox h2 {
+    font-size: 18px;
+  }
+
+  .registerBox input[type="text"],
+  .registerBox input[type="password"] {
+    font-size: 16px;
+  }
+
+  .registerBox button[type="submit"] {
+    font-size: 14px;
+  }
+}

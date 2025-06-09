@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MyPAGE</title>
+
+    <!-- Normalize CSS CDN -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css"
+      integrity="sha512-NhSC1YmyruXifcj/KFRWoC561YpHpc5Jtzgvbuzx5VozKpWvQ+4nXhPdFgmx8xqexRcpAglTj9sIBWINXa8x5w=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+
+    <!-- fontawsome CDN -->
+    <script
+      src="https://kit.fontawesome.com/a2bddeb8f2.js"
+      crossorigin="anonymous"
+    ></script>
+    <link rel="stylesheet" href="/static/css/common.css" />
+    <link rel="stylesheet" href="/static/css/mypage.css" />
+    <script defer src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script defer src="/static/js/mypage.js"></script>
+    <%- include("./include/include",{title : "mypage"}) %>
+  </head>
+  <body>
+    <%- include("./include/header") %>
+
+    <div class="mypage-container">
+      <div class="profile">
+        <img
+          id="profile-image"
+          src="<%=profilePath%>"
+          alt="사용자 프로필 이미지"
+        />
+      </div>
+      <ul class="infoBox">
+        <li><span>아이디: </span> <span><%=userId%> </span></li>
+        <li><span>닉네임</span> <span><%=nickname%></span></li>
+      </ul>
+      <h3 class="welcome">
+        <span><%=nickname%></span>님, 오늘 당신의
+        <span id="pick">Pick</span>은??😎
+      </h3>
+      <ul class="reviewsBox">
+
+        <li>
+          <span class="tit">게시글</span>
+          <span class="len"><span><%= boards.length %></span>개</span>
+          <button
+            class="fa-solid fa-chevron-right arrow"
+            onclick="showList(this)"
+          ></button>
+        </li>
+        <div class="content-container hide">
+          <ul class="list">
+            <li class="list-head">
+              <span>순번</span>
+              <span>제목</span>
+              <span>작성자</span>
+              <span>날짜</span>
+            </li>
+          <%for(let i=0;i<boards.length;i++){%>
+            <a href="/board/view/<%=boards[i].boardId%>">
+              <li>
+                <span><%= i+1 %></span>
+                <span><%=boards[i].boardTitle%></span>
+                <span><%=nickname%></span>
+                <span><%=boards[i].boardDate%></span>
+              </li>
+            </a>
+            <%}%>
+          </ul>
+          <div class="pagination">
+            <span class="selected">1</span>
+            <span>2</span>
+            <span>3</span>
+          </div>
+        </div>
+        <li>
+          <span class="tit">상품 리뷰</span>
+          <span class="len"><span id="product-review-count">0</span>개</span>
+          <button
+            class="fa-solid fa-chevron-right arrow"
+            onclick="showList(this)"
+          ></button>
+        </li>
+        <div class="content-container hide" id="product-review-container">
+          <ul class="list" id="product-review-list">
+            <li class="list-head">
+              <span>순번</span>
+              <span>내용</span>
+              <span>상품명</span>
+              <span>작성일</span>
+            </li>
+          </ul>
+          <div class="pagination">
+            <span class="selected">1</span>
+            <span>2</span>
+            <span>3</span>
+          </div>
+        </div>
+
+        <li>
+          <span class="tit">게시글 리뷰</span>
+          <span class="len"><span>5</span>개</span>
+          <button
+            class="fa-solid fa-chevron-right arrow"
+            onclick="showList(this)"
+          ></button>
+        </li>
+        <div class="content-container hide">
+          <ul class="list">
+            <li class="list-head">
+              <span>순번</span>
+              <span>제목</span>
+              <span>작성자</span>
+              <span>날짜</span>
+            </li>
+            <%for(let i=1;i<=5;i++){%>
+            <a href="#">
+              <li>
+                <span><%= i %></span>
+                <span>편의점 꿀맛 조합 아시는 분 추천좀여!!!</span>
+                <span>편죽이이</span>
+                <span>2024-12-18</span>
+              </li>
+            </a>
+            <%}%>
+          </ul>
+          <div class="pagination">
+            <span class="selected">1</span>
+            <span>2</span>
+            <span>3</span>
+          </div>
+        </div>
+      </ul>
+      <div class="buttonBox">
+        <a href="/userview">
+          <button class="updateBtn">회원정보 수정</button>
+        </a>
+        <button class="deleteBtn" onclick="confirmDelete()">회원 탈퇴</button>
+
+        <div id="passwordModal">
+          <div class="modal-header">비밀번호 확인</div>
+          <div class="modal-body">
+            <input
+              type="password"
+              id="passwordInput"
+              placeholder="비밀번호를 입력하세요"
+            />
+          </div>
+          <div class="modal-actions">
+            <button class="btnYES" onclick="submitPassword()">확인</button>
+            <button class="btnNO" onclick="closeModal()">취소</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

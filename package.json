@@ -9,15 +9,22 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "ajv": "^8.17.1",
     "axios": "^1.9.0",
+    "bcrypt": "^6.0.0",
     "cheerio": "^1.0.0",
     "cross-env": "^7.0.3",
     "dotenv": "^16.5.0",
     "ejs": "^3.1.10",
     "express": "^5.1.0",
+    "express-session": "^1.18.1",
     "multer": "^2.0.0",
     "mysql2": "^3.14.1",
+    "node-fetch": "^3.3.2",
+    "nodemailer": "^7.0.3",
+    "p-limit": "^6.2.0",
     "sequelize": "^6.37.7",
-    "sequelize-cli": "^6.6.3"
+    "sequelize-cli": "^6.6.3",
+    "tough-cookie": "^5.1.2"
   }
 }

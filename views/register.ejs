@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <%- include("./include/include",{title : "register"}) %>
+    <link rel="stylesheet" href="static/css/register.css" />
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  </head>
+  <body>
+    <div class="header"><%- include("./include/header") %></div>
+    <div class="registerBox">
+      <h2>회원가입</h2>
+      <form id="registerForm">
+        <label for="userId" class="inputWithCheckButton">
+          아이디:
+          <div class="Idline">
+            <input
+              type="text"
+              name="userId"
+              id="userId"
+              required
+              placeholder="3~15자 영문, 숫자"
+              pattern="^([a-z0-9]){3,15}$"
+              title="3~15자 영문, 숫자 입력"
+            />
+            <button type="button" onclick="checkDuplication();">
+              중복확인
+            </button>
+          </div>
+          <input
+            type="hidden"
+            id="idDuplication"
+            name="idDuplication"
+            value="idUnCheck"
+          />
+        </label>
+        <label for="userPw">
+          비밀번호:
+          <input
+            type="password"
+            name="userPw"
+            id="userPw"
+            placeholder="6~14자 영문, 숫자, 특수문자(._@!)"
+            pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[._@!])[A-Za-z\d._@!]{6,14}$"
+            title="소, 대 문자, 숫자, 특수문자(._@!) 사용"
+            required
+          />
+        </label>
+        <label for="nickname">
+          닉네임:
+          <input type="text" name="nickname" id="nickname" required /><br />
+        </label>
+        <div id="registerBtn">
+          <button type="submit" id="registerSubmit">회원가입</button>
+        </div>
+      </form>
+      <p>이미 계정이 있나요? <a href="./login">로그인</a></p>
+    </div>
+    <script defer src="/static/js/register.js"></script>
+    <%- include("./include/footer") %>
+  </body>
+</html>

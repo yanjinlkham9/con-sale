@@ -1,0 +1,36 @@
+<!-- commentsPopup.ejs -->
+<div class="product-popup" id="comments-popup">
+  <div class="popup-content">
+    <button class="popup-close" onclick="closeCommentsPopup()">&times;</button>
+    <h2 id="popup-product-name"></h2>
+    <img id="popup-product-image" src="" alt="" class="popup-product-image" />
+    <p id="popup-product-price" class="popup-product-price"></p>
+    <p id="popup-product-convenience" class="popup-product-convenience"></p>
+    <p id="popup-product-event" class="popup-product-event"></p>
+
+    <div class="comments-section">
+      <h3>댓글</h3>
+      <div id="comments-list">
+        <!-- 댓글이 여기에 표시됩니다 -->
+      </div>
+
+      <% if (userId) { %>
+      <div class="add-comment-form">
+        <h4>댓글 작성</h4>
+        <textarea
+          id="new-comment-content"
+          placeholder="댓글을 입력하세요"
+        ></textarea>
+        <button class="btn submit-comment-button" onclick="submitComment()">
+          작성
+        </button>
+      </div>
+      <% } else { %>
+      <p>댓글을 작성하려면 <a href="/login">로그인</a>하세요.</p>
+      <% } %>
+    </div>
+  </div>
+  <div class="loading-spinner" id="loading-spinner">
+    <i class="fas fa-spinner fa-spin"></i> 로딩 중...
+  </div>
+</div>

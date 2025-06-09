@@ -1,0 +1,88 @@
+<!-- views/index.ejs -->
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>편의점 상품</title>
+    <!-- 외부 CSS 파일 링크 -->
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body>
+    <h1>편의점 상품 목록</h1>
+
+    <div class="product-container">
+      <% products.forEach(product => { %>
+      <div
+        class="product-card <%= product.sent ? 'sent' : '' %> <%= product.isDuplicate ? 'duplicate' : '' %>"
+        data-product-id="<%= product.id %>"
+        data-product-tags="<%- product.tags ? JSON.stringify(product.tags) : '[]' %>"
+      >
+        <!-- 중복 상품 표시 -->
+        <% if (product.isDuplicate) { %>
+        <div class="duplicate-label">이미 DB에 저장된 상품입니다</div>
+        <% } %>
+
+        <!-- 전송 여부에 따른 버튼/라벨 표시 -->
+        <% if (product.sent) { %>
+        <div class="sent-label">이미 전송됨</div>
+        <button
+          class="delete-db-button"
+          onclick="deleteFromDB('<%= product.id %>')"
+        >
+          DB에서 삭제
+        </button>
+        <% } else { %>
+        <button class="send-db-button" onclick="sendToDB('<%= product.id %>')">
+          DB로 전송
+        </button>
+        <button
+          class="update-tags-button"
+          onclick="updateTags('<%= product.id %>')"
+          style="display: none"
+        >
+          태그 저장
+        </button>
+        <% } %>
+        <img
+          src="<%= product.imageUrl %>"
+          alt="<%= product.name %>"
+          onerror="this.onerror=null; this.src='/static/default-image.jpg';"
+        />
+        <div class="product-name"><%= product.name %></div>
+        <div class="product-price"><%= product.price.toLocaleString() %>원</div>
+        <div class="product-convini"><%= product.convini %></div>
+        <div class="tags">
+          <!-- 태그 버튼 렌더링 -->
+          <button
+            class="tag-button <%= product.tags && product.tags.includes('삼각김밥') ? 'active' : '' %>"
+            onclick="toggleTag(this, '<%= product.id %>', '삼각김밥')"
+          >
+            삼각김밥
+          </button>
+          <button
+            class="tag-button <%= product.tags && product.tags.includes('도시락') ? 'active' : '' %>"
+            onclick="toggleTag(this, '<%= product.id %>', '도시락')"
+          >
+            도시락
+          </button>
+          <button
+            class="tag-button <%= product.tags && product.tags.includes('샐러드') ? 'active' : '' %>"
+            onclick="toggleTag(this, '<%= product.id %>', '샐러드')"
+          >
+            샐러드
+          </button>
+          <button
+            class="tag-button <%= product.tags && product.tags.includes('샌드위치') ? 'active' : '' %>"
+            onclick="toggleTag(this, '<%= product.id %>', '샌드위치')"
+          >
+            샌드위치
+          </button>
+        </div>
+      </div>
+      <% }); %>
+    </div>
+
+    <!-- 외부 JavaScript 파일 링크 -->
+    <script src="/static/js/index.js"></script>
+  </body>
+</html>
